@@ -16,6 +16,43 @@ public final class MediaParser {
                 "true".equalsIgnoreCase(val(p, 4)), thumb, null);
     }
 
+    static String parseMprisMetadataString(String xml, String field) {
+        int k = xml.indexOf("string \"" + field + "\"");
+        if (k < 0) return null;
+        int v = xml.indexOf("variant", k);
+        if (v < 0) return null;
+        v = xml.indexOf("string \"", v);
+        if (v < 0) return null;
+        v += 8;
+        int e = xml.indexOf('"', v);
+        return e < 0 ? null : xml.substring(v, e);
+    }
+
+    static long parseMprisMetadataInt64(String xml, String field) {
+        int k = xml.indexOf("string \"" + field + "\"");
+        if (k < 0) return -1;
+        int v = xml.indexOf("variant", k);
+        if (v < 0) return -1;
+        v = xml.indexOf("int64", v);
+        if (v < 0) return -1;
+        v += 6;
+        int e = xml.indexOf('\n', v);
+        try { return Long.parseLong(xml.substring(v, e < 0 ? xml.length() : e).trim()); }
+        catch (NumberFormatException ex) { return -1; }
+    }
+
+    static long parseMprisVariantInt64(String xml) {
+        if (xml == null) return -1;
+        int i = xml.indexOf("int64");
+        if (i < 0) return -1;
+        i += 6;
+        int e = xml.indexOf('\n', i);
+        try { return Long.parseLong(xml.substring(i, e < 0 ? xml.length() : e).trim()) / 1000; }
+        catch (NumberFormatException ex) { return -1; }
+    }
+
+
+
     private static long parseLong(String s) {
         if (s == null) return -1;
         try { return Long.parseLong(s); } catch (NumberFormatException e) { return -1; }

@@ -3,6 +3,7 @@ package dev.trashcode07.trashaddons.media;
 import dev.trashcode07.trashaddons.TrashAddons;
 import dev.trashcode07.trashaddons.media.providers.MediaProvider;
 import dev.trashcode07.trashaddons.media.providers.WindowsProvider;
+import dev.trashcode07.trashaddons.media.providers.LinuxProvider;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -29,13 +30,14 @@ public final class MediaUtil {
     private static MediaProvider createProvider() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) return new WindowsProvider();
+        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) return new LinuxProvider();
         return null;
     }
 
     private static final AtomicReference<MediaInfo> CURRENT = new AtomicReference<>(MediaInfo.EMPTY);
     private static final ScheduledExecutorService executor =
             Executors.newSingleThreadScheduledExecutor(r -> {
-                Thread t = new Thread(r, "trashaddonsv2-media");
+                Thread t = new Thread(r, "trashaddons-media");
                 t.setDaemon(true);
                 return t;
             });
@@ -82,7 +84,7 @@ public final class MediaUtil {
             lastPolledSmtcPos = raw.positionMs();
             internalPositionMs = raw.positionMs() >= 0 ? raw.positionMs() : 0;
         } else if (!raw.isPlaying()) {
-            //i blame windows for having to do all of this slop
+            //blame windows for having to do all of this slop
             if (raw.positionMs() >= 0 && raw.positionMs() != lastPolledSmtcPos) {
                 lastPolledSmtcPos = raw.positionMs();
                 internalPositionMs = raw.positionMs();
