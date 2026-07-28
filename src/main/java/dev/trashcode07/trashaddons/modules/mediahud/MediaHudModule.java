@@ -7,6 +7,8 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import org.cobalt.event.EventBus;
 import org.cobalt.module.ModuleCategory;
 import org.cobalt.module.type.RenderableModule;
+import org.cobalt.ui.component.setting.impl.CheckboxSetting;
+import org.cobalt.ui.component.setting.impl.SliderSetting;
 import org.cobalt.ui.theme.Theme;
 import org.cobalt.util.client.WindowUtils;
 import org.cobalt.util.render.SkiaRenderer;
@@ -33,10 +35,22 @@ public class MediaHudModule extends RenderableModule {
     private SkiaImage cachedThumbSkia;
     private String cachedThumbBase64;
 
+    private final CheckboxSetting showControlsWhenChat = new CheckboxSetting(
+            "Show Controls When Chat",
+            "Show media controls when chat is open",
+            true
+    );
+    private final SliderSetting alpha = new SliderSetting(
+            "Alpha",
+            "HUD background opacity",
+            176, 0, 255
+    );
+
     private boolean prevMouseDown;
 
     private MediaHudModule() {
         super("Media HUD", ModuleCategory.VISUAL);
+        addSettings(showControlsWhenChat, alpha);
         setXPos(20f);
         setYPos(20f);
         setScale(1f);
@@ -67,7 +81,7 @@ public class MediaHudModule extends RenderableModule {
         float h = h(), x = getXPos(), y = getYPos();
         Theme t = getTheme();
 
-        SkiaRenderer.roundedRect(x, y, W, h, RR, alpha(t.getBackgroundSecondary(), 0xB0), ALL_CORNERS);
+        SkiaRenderer.roundedRect(x, y, W, h, RR, alpha(t.getBackgroundSecondary(), alpha.getValue()), ALL_CORNERS);
         SkiaRenderer.roundedOutline(x, y, W, h, 1, RR, alpha(t.getBorder(), 0x75), ALL_CORNERS);
 
         float thumbX = x + 8f, thumbY = y + 9f;
@@ -89,7 +103,7 @@ public class MediaHudModule extends RenderableModule {
         drawTitle(media, bold, textX, y + 9f, availW, h, t.getTextPrimary(), 12f);
         drawArtist(media, regular, textX, y + 24f, availW, t.getTextMuted());
         drawProgress(media, regular, textX, y + 40f, y + 47f, availW, t);
-        if (chatOpen) drawControls(media, x, y, t);
+        if (chatOpen && showControlsWhenChat.getValue()) drawControls(media, x, y, t);
     }
 
     private void ensureIcons() {
@@ -136,7 +150,7 @@ public class MediaHudModule extends RenderableModule {
     }
 
     private void drawProgress(MediaInfo m, SkiaFont font, float bx, float by, float ty, float aw, Theme t) {
-        SkiaRenderer.roundedRect(bx, by, aw, 3.5f, 1.75f, alpha(t.getBackgroundPrimary(), 0xB0), ALL_CORNERS);
+        SkiaRenderer.roundedRect(bx, by, aw, 3.5f, 1.75f, alpha(t.getBackgroundPrimary(), alpha.getValue()), ALL_CORNERS);
         float p = Math.max(0f, Math.min(1f, m.progress()));
         if (p > 0) SkiaRenderer.roundedRect(bx, by, Math.max(4f, aw * p), 3.5f, 1.75f, t.getAccentPrimary(), ALL_CORNERS);
         String time = m.durationMs() > 0
@@ -207,8 +221,8 @@ public class MediaHudModule extends RenderableModule {
         return dx * dx + dy * dy <= r * r;
     }
 
-    private static float h() {
-        return Minecraft.getInstance().gui.screen() instanceof ChatScreen ? H_EXPANDED : H;
+    private float h() {
+        return (Minecraft.getInstance().gui.screen() instanceof ChatScreen && showControlsWhenChat.getValue()) ? H_EXPANDED : H;
     }
 
     private static String trunc(SkiaFont f, String s, float maxW, float size) {
