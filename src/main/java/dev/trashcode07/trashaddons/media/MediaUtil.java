@@ -1,6 +1,7 @@
 package dev.trashcode07.trashaddons.media;
 
 import dev.trashcode07.trashaddons.TrashAddons;
+import dev.trashcode07.trashaddons.media.providers.MacProvider;
 import dev.trashcode07.trashaddons.media.providers.MediaProvider;
 import dev.trashcode07.trashaddons.media.providers.WindowsProvider;
 import dev.trashcode07.trashaddons.media.providers.LinuxProvider;
@@ -31,7 +32,7 @@ public final class MediaUtil {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) return new WindowsProvider();
         if (os.contains("nix") || os.contains("nux") || os.contains("aix")) return new LinuxProvider();
-        return null;
+        return new MacProvider();
     }
 
     private static final AtomicReference<MediaInfo> CURRENT = new AtomicReference<>(MediaInfo.EMPTY);

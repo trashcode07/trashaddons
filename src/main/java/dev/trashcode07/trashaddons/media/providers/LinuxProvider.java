@@ -4,6 +4,7 @@ import dev.trashcode07.trashaddons.TrashAddons;
 import dev.trashcode07.trashaddons.media.MediaInfo;
 import dev.trashcode07.trashaddons.media.MediaUtil;
 
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,6 +13,12 @@ import java.util.Base64;
 import java.util.List;
 
 public final class LinuxProvider implements MediaProvider {
+
+    // stolen from poli <3
+    private static final List<String> FLATPAK_PREFIX =
+            new File("/.flatpak-info").exists()
+                    ? List.of("flatpak-spawn", "--host")
+                    : List.of();
 
     @Override
     public MediaInfo pollCurrentMedia() {
@@ -51,9 +58,11 @@ public final class LinuxProvider implements MediaProvider {
                     bus = findMprisBus();
                 }
                 if (bus != null) {
-                    MediaUtil.run("dbus-send", "--session", "--type=method_call",
+                    List<String> cmd = new ArrayList<>(FLATPAK_PREFIX);
+                    cmd.addAll(List.of("dbus-send", "--session", "--type=method_call",
                             "--dest=" + bus, "/org/mpris/MediaPlayer2",
-                            "org.mpris.MediaPlayer2.Player." + method);
+                            "org.mpris.MediaPlayer2.Player." + method));
+                    MediaUtil.run(cmd.toArray(new String[0]));
                 }
             } catch (Exception e) {
                 TrashAddons.logger.debug("[Media] linux control error: {}", e.getMessage());
@@ -75,7 +84,8 @@ public final class LinuxProvider implements MediaProvider {
         return null;
     }
     private static String dbusCall(String dest, String path, String method, String busType, String... args) {
-        List<String> cmd = new ArrayList<>(List.of("dbus-send", busType, "--print-reply",
+        List<String> cmd = new ArrayList<>(FLATPAK_PREFIX);
+        cmd.addAll(List.of("dbus-send", busType, "--print-reply",
                 "--dest=" + dest, path, method));
         cmd.addAll(List.of(args));
         return MediaUtil.run(cmd.toArray(new String[0]));
