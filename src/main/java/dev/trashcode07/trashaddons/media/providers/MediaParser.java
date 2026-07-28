@@ -1,0 +1,35 @@
+package dev.trashcode07.trashaddons.media.providers;
+
+import dev.trashcode07.trashaddons.media.MediaInfo;
+
+public final class MediaParser {
+    public MediaParser() {}
+
+    static MediaInfo parseWindowsPipe(String line) {
+        String delimiter = line.contains(":::") ? ":::" : "\\|";
+        String[] p = line.split(delimiter, -1);
+        if (p.length < 5) return MediaInfo.EMPTY;
+        String thumb = p.length >= 7 ? val(p, 6) : null;
+        return new MediaInfo(
+                val(p, 0), val(p, 1), null, shortSource(val(p, 5)),
+                parseLong(val(p, 3)), parseLong(val(p, 2)),
+                "true".equalsIgnoreCase(val(p, 4)), thumb, null);
+    }
+
+    private static long parseLong(String s) {
+        if (s == null) return -1;
+        try { return Long.parseLong(s); } catch (NumberFormatException e) { return -1; }
+    }
+
+    private static String val(String[] arr, int i) {
+        String s = i < arr.length ? arr[i].trim() : null;
+        return s == null || s.isEmpty() || s.equalsIgnoreCase("null") ? null : s;
+    }
+
+    private static String shortSource(String id) {
+        if (id == null) return null;
+        int dot = id.lastIndexOf('.');
+        String n = dot >= 0 ? id.substring(dot + 1) : id;
+        return n.replace(".exe", "").replace(".Exe", "").toLowerCase();
+    }
+}

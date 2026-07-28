@@ -1,0 +1,7 @@
+{
+  "id": "${mod_id}",
+  "name": "Trash Addons",
+  "version": "1.0.0",
+  "entrypoints": ["${base_group}.TrashAddons"],
+  "mixins": ["${mod_id}.mixins.json"]
+}
