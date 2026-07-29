@@ -3,8 +3,6 @@ package dev.trashcode07.trashaddons.media.providers;
 import dev.trashcode07.trashaddons.media.MediaInfo;
 
 public final class MediaParser {
-    public MediaParser() {}
-
     static MediaInfo parseWindowsPipe(String line) {
         String delimiter = line.contains(":::") ? ":::" : "\\|";
         String[] p = line.split(delimiter, -1);
@@ -67,6 +65,6 @@ public final class MediaParser {
         if (id == null) return null;
         int dot = id.lastIndexOf('.');
         String n = dot >= 0 ? id.substring(dot + 1) : id;
-        return n.replace(".exe", "").replace(".Exe", "").toLowerCase();
+        return n.toLowerCase().replace(".exe","");
     }
 }

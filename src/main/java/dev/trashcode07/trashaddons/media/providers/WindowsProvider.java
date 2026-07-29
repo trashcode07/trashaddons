@@ -15,7 +15,7 @@ public final class WindowsProvider implements MediaProvider {
 
     private static Path smtcScriptPath;
     private static Path ctrlScriptPath;
-
+    //didnt think i would need to add this comment, but the scripts are for polling the media and controlling the media they can be found in resources
     public WindowsProvider() {
         smtcScriptPath = extractScript("media_smtc.ps1", "media_smtc.ps1");
         ctrlScriptPath = extractScript("media_ctrl.ps1", "media_ctrl.ps1");

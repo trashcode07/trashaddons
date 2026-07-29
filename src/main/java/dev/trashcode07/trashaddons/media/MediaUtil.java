@@ -101,7 +101,7 @@ public final class MediaUtil {
             long smtcPos = raw.positionMs();
             if (smtcPos >= 0 && smtcPos != lastPolledSmtcPos) {
                 lastPolledSmtcPos = smtcPos;
-                if (smtcPos > internalPositionMs + SEEK_CORRECTION_THRESHOLD_MS) {
+                if (Math.abs(smtcPos - internalPositionMs) > SEEK_CORRECTION_THRESHOLD_MS) {
                     internalPositionMs = smtcPos;
                 }
             }

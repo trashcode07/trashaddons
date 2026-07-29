@@ -4,7 +4,6 @@ import dev.trashcode07.trashaddons.media.MediaInfo;
 import dev.trashcode07.trashaddons.media.MediaUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
-import org.cobalt.event.EventBus;
 import org.cobalt.module.ModuleCategory;
 import org.cobalt.module.type.RenderableModule;
 import org.cobalt.ui.component.setting.impl.CheckboxSetting;
@@ -17,7 +16,7 @@ import org.cobalt.util.render.skia.data.SkiaFont;
 import org.cobalt.util.render.skia.data.SkiaImage;
 import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
+import java.awt.Color;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
@@ -56,9 +55,8 @@ public class MediaHudModule extends RenderableModule {
     @Override public float getWidth()  { return W; }
     @Override public float getHeight() { return h(); }
 
-    @Override public void onEnable()  { EventBus.register(this); }
     @Override public void onDisable() {
-        EventBus.unregister(this);
+        super.onDisable();
         freeIcons();
     }
 
