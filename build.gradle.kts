@@ -24,9 +24,6 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${property("loader_version")}")
     implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
     implementation("com.github.CobaltScripts:Cobalt:1.0.1.7d4c3ea")
-
-    implementation("com.jagrosh:DiscordIPC:0.6.0-SNAPSHOT")
-    runtimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
 }
 
 tasks {

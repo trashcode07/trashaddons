@@ -7,7 +7,7 @@
 ![mod-loader](https://img.shields.io/badge/modloader-Cobalt-4682b4?style=for-the-badge&logoColor=white)
 ![minecraft-version](https://img.shields.io/badge/Minecraft-26.2-6BAA57?style=for-the-badge&logoColor=white)
 ![language](https://img.shields.io/badge/language-Java-ED8B00?style=for-the-badge&logoColor=white)
-![version](https://img.shields.io/badge/version-1.0.2-CC3333?style=for-the-badge)
+![version](https://img.shields.io/badge/version-1.0.3-CC3333?style=for-the-badge)
 
 </div>
 
