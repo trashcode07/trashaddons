@@ -47,13 +47,9 @@ public class MediaHudModule extends RenderableModule {
     );
 
     private boolean prevMouseDown;
-
     private MediaHudModule() {
-        super("Media HUD", ModuleCategory.VISUAL);
+        super("Media HUD", ModuleCategory.VISUAL,20f,20f);
         addSettings(showControlsWhenChat, alpha);
-        setXPos(20f);
-        setYPos(20f);
-        setScale(1f);
         setEnabled(true);
     }
 
