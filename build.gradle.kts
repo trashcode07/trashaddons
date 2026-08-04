@@ -23,7 +23,7 @@ dependencies {
 
     implementation("net.fabricmc:fabric-loader:${property("loader_version")}")
     implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
-    implementation("com.github.CobaltScripts:Cobalt:26.2-1.0.6.3cd5419")
+    implementation("com.github.CobaltScripts:Cobalt:26.1.2-1.0.4.1a5d396")
 }
 
 tasks {

@@ -71,7 +71,7 @@ public class MediaHudModule extends RenderableModule {
 
         ensureIcons();
 
-        boolean chatOpen = Minecraft.getInstance().gui.screen() instanceof ChatScreen;
+        boolean chatOpen = Minecraft.getInstance().screen instanceof ChatScreen;
         float h = h(), x = getXPos(), y = getYPos();
         Theme t = getTheme();
 
@@ -216,7 +216,7 @@ public class MediaHudModule extends RenderableModule {
     }
 
     private float h() {
-        return (Minecraft.getInstance().gui.screen() instanceof ChatScreen && showControlsWhenChat.getValue()) ? H_EXPANDED : H;
+        return (Minecraft.getInstance().screen instanceof ChatScreen && showControlsWhenChat.getValue()) ? H_EXPANDED : H;
     }
 
     private static String trunc(SkiaFont f, String s, float maxW, float size) {
