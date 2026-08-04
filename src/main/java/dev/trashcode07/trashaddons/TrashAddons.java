@@ -14,7 +14,7 @@ public class TrashAddons implements Addon {
     @Override
     public void onLoad() {
         logger.info("TrashAddons Loaded!");
-        ModuleManager.INSTANCE.addModule(MediaHudModule.INSTANCE);
+        ModuleManager.addModule(MediaHudModule.INSTANCE);
         MediaUtil.start();
     }
 

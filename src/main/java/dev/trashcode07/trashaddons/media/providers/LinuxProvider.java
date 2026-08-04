@@ -3,11 +3,18 @@ package dev.trashcode07.trashaddons.media.providers;
 import dev.trashcode07.trashaddons.TrashAddons;
 import dev.trashcode07.trashaddons.media.MediaInfo;
 import dev.trashcode07.trashaddons.media.MediaUtil;
+import net.minecraft.client.Minecraft;
+import org.cobalt.ui.notification.NotificationManager;
+import org.cobalt.util.chat.ChatUtils;
+import org.cobalt.util.chat.MessageType;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -19,6 +26,28 @@ public final class LinuxProvider implements MediaProvider {
             new File("/.flatpak-info").exists()
                     ? List.of("flatpak-spawn", "--host")
                     : List.of();
+
+    private static boolean hasFlatpakHostPerm() {
+        try (BufferedReader r = new BufferedReader(new FileReader("/.flatpak-info"))) {
+            boolean in = false;
+            String l;
+            while ((l = r.readLine()) != null) {
+                if (l.startsWith("[")) { in = l.equals("[Context]"); continue; }
+                if (in && l.startsWith("talk-name=") && l.contains("org.freedesktop.Flatpak")) return true;
+            }
+        } catch (Exception ignored) {}
+        return false;
+    }
+
+    static {
+        if (new File("/.flatpak-info").exists() && !hasFlatpakHostPerm()) {
+            NotificationManager.queue(
+                    "Flatpak Permission Missing",
+                    "MediaHUD requires host access.\nRun: flatpak override --user --talk-name=org.freedesktop.Flatpak " + System.getenv("FLATPAK_ID"),
+                    Duration.ofSeconds(10)
+            );
+        }
+    }
 
     @Override
     public MediaInfo pollCurrentMedia() {
