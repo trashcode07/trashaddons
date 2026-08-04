@@ -32,8 +32,8 @@ public final class LinuxProvider implements MediaProvider {
             boolean in = false;
             String l;
             while ((l = r.readLine()) != null) {
-                if (l.startsWith("[")) { in = l.equals("[Context]"); continue; }
-                if (in && l.startsWith("talk-name=") && l.contains("org.freedesktop.Flatpak")) return true;
+                if (l.startsWith("[")) { in = l.equals("[Session Bus Policy]"); continue; }
+                if (in && l.startsWith("org.freedesktop.Flatpak=talk")) return true;
             }
         } catch (Exception ignored) {}
         return false;
@@ -44,7 +44,7 @@ public final class LinuxProvider implements MediaProvider {
             NotificationManager.queue(
                     "Flatpak Permission Missing",
                     "MediaHUD requires host access.\nRun: flatpak override --user --talk-name=org.freedesktop.Flatpak " + System.getenv("FLATPAK_ID"),
-                    Duration.ofSeconds(10)
+                    Duration.ofSeconds(30)
             );
         }
     }
